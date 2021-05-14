@@ -1,3 +1,5 @@
+# QR Code - Social Links
+
 Create an account and add your social media / contact information
 
 Share your information with a QR code
