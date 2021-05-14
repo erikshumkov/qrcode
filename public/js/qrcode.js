@@ -3,7 +3,7 @@ const id = window.location.href.split('/').slice('-1')
 
 // Initialize QR code, render it to page
 const qrc = new QRCode(document.getElementById('qrcode'), {
-  text: `http://localhost:5000/users/single/${id}`,
+  text: `https://qr-social-links.herokuapp.com/users/single/${id}`,
   width: 250,
   height: 250,
 })
