@@ -1,4 +1,7 @@
 <h1 class="mt-4">Dashboard</h1>
-<a href="/users/qr/<%= id %>">My QR Code</a>
+<div class="flex">
+  <a href="/users/qr/<%= id %>">My QR Code</a>
+  <a href="/users/edit/<%= id %>">Edit Profile</a>
+</div>
 <p class="lead mb-3">Welcome <%= name %></p>
 <a href="/users/logout" class="btn btn-secondary">Logout</a>
