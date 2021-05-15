@@ -41,110 +41,20 @@ router.get('/edit/:id', ensureAuthenticated, async (req, res) => {
 })
 
 // Edit profile
-// router.put('/edit/:id', ensureAuthenticated, async (req, res) => {
-//   const {
-//     name,
-//     email,
-//     telephone,
-//     website,
-//     twitter,
-//     instagram,
-//     facebook,
-//     github,
-//     password,
-//     password2,
-//   } = req.body
-//   let errors = []
+router.put('/edit/:id', ensureAuthenticated, async (req, res) => {
+  try {
+    const user = await User.findOneAndUpdate({ _id: req.params.id }, req.body, {
+      new: true,
+    })
 
-//   // Check required fields
-//   if (!name || !email || !password || !password2) {
-//     errors.push({ msg: 'Please fill in required fields' })
-//   }
-
-//   // Check passwords match
-//   if (password !== password2) {
-//     errors.push({ msg: 'Passwords do not match' })
-//   }
-
-//   // Check passwords length
-//   if (password.length < 6) {
-//     errors.push({ msg: 'Password should be at least 6 characters' })
-//   }
-
-//   if (errors.length > 0) {
-//     res.render('update', {
-//       errors,
-//       name,
-//       email,
-//       telephone,
-//       website,
-//       twitter,
-//       instagram,
-//       facebook,
-//       github,
-//       password,
-//       password2,
-//     })
-//   } else {
-//     // Validation passed
-//     User.findOneAndUpdate({ email: email }).then(user => {
-//       if (user) {
-//         // User exists
-//         errors.push({ msg: 'Email is already registered' })
-//         res.render('register', {
-//           errors,
-//           name,
-//           email,
-//           telephone,
-//           website,
-//           twitter,
-//           instagram,
-//           facebook,
-//           github,
-//           password,
-//           password2,
-//         })
-//       } else {
-//         const newUser = new User({
-//           name,
-//           email,
-//           telephone,
-//           website,
-//           twitter,
-//           instagram,
-//           facebook,
-//           github,
-//           password,
-//         })
-
-//         // Hash password
-//         bcrypt.genSalt(10, (err, salt) =>
-//           bcrypt.hash(newUser.password, salt, (err, hash) => {
-//             if (err) throw err
-
-//             // Set password to hashed
-//             newUser.password = hash
-
-//             // Save user
-//             newUser
-//               .save()
-//               .then(user => {
-//                 req.flash(
-//                   'success_msg',
-//                   'You are now registered and can log in'
-//                 )
-//                 res.redirect('/users/login')
-//               })
-//               .catch(err => console.log(err))
-//           })
-//         )
-//       }
-//     })
-//   }
-// })
+    res.status(200).json({ success: true, redirect: '/dashboard' })
+  } catch (err) {
+    res.status(500).json({ success: false, error: err })
+  }
+})
 
 // Register Handle
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   const {
     name,
     email,
@@ -190,59 +100,50 @@ router.post('/register', (req, res) => {
     })
   } else {
     // Validation passed
-    User.findOne({ email: email }).then(user => {
-      if (user) {
-        // User exists
-        errors.push({ msg: 'Email is already registered' })
-        res.render('register', {
-          errors,
-          name,
-          email,
-          telephone,
-          website,
-          twitter,
-          instagram,
-          facebook,
-          github,
-          password,
-          password2,
-        })
-      } else {
-        const newUser = new User({
-          name,
-          email,
-          telephone,
-          website,
-          twitter,
-          instagram,
-          facebook,
-          github,
-          password,
-        })
+    const user = await User.findOne({ email: email })
 
-        // Hash password
-        bcrypt.genSalt(10, (err, salt) =>
-          bcrypt.hash(newUser.password, salt, (err, hash) => {
-            if (err) throw err
+    if (user) {
+      // User exists
+      errors.push({ msg: 'Email is already registered' })
+      res.render('register', {
+        errors,
+        name,
+        email,
+        telephone,
+        website,
+        twitter,
+        instagram,
+        facebook,
+        github,
+        password,
+        password2,
+      })
+    } else {
+      const newUser = new User({
+        name,
+        email,
+        telephone,
+        website,
+        twitter,
+        instagram,
+        facebook,
+        github,
+        password,
+      })
 
-            // Set password to hashed
-            newUser.password = hash
+      // Hash password
+      const salt = await bcrypt.genSalt(10)
 
-            // Save user
-            newUser
-              .save()
-              .then(user => {
-                req.flash(
-                  'success_msg',
-                  'You are now registered and can log in'
-                )
-                res.redirect('/users/login')
-              })
-              .catch(err => console.log(err))
-          })
-        )
-      }
-    })
+      const hash = await bcrypt.hash(newUser.password, salt)
+
+      newUser.password = hash
+
+      // Save user
+      newUser.save()
+
+      req.flash('success_msg', 'You are now registered and can log in')
+      res.status(200).redirect('/users/login')
+    }
   }
 })
 
