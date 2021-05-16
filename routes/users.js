@@ -42,9 +42,35 @@ router.get('/edit/:id', ensureAuthenticated, async (req, res) => {
 
 // Edit profile
 router.put('/edit/:id', ensureAuthenticated, async (req, res) => {
+  // let user = await User.findById(req.params.id)
+
+  // const {
+  //   name,
+  //   email,
+  //   telephone,
+  //   website,
+  //   twitter,
+  //   instagram,
+  //   facebook,
+  //   github,
+  // } = user
+  // let errors = []
+
+  // if (!req.body.name || !req.body.email) {
+  //   errors.push({ msg: 'Please fill in required fields' })
+  // }
+
+  // if (errors.length > 0) {
+  //   return res.render('update', {
+  //     errors,
+  //     user,
+  //   })
+  // }
+
   try {
     const user = await User.findOneAndUpdate({ _id: req.params.id }, req.body, {
       new: true,
+      runValidators: true,
     })
 
     res.status(200).json({ success: true, redirect: '/dashboard' })

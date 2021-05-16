@@ -13,8 +13,6 @@ async function update() {
   const instagram = form.instagram.value
   const facebook = form.facebook.value
   const github = form.github.value
-  const password = form.password.value
-  const password2 = form.password2.value
 
   const bodyValues = {
     name,
@@ -28,11 +26,10 @@ async function update() {
   }
 
   // Check if password match and are not empty values
-  if (password === password2 && password !== '' && password2 !== '') {
-    console.log('True dat')
-    bodyValues.password = password
-    bodyValues.password2 = password2
-  }
+  // if (password === password2 && password !== '' && password2 !== '') {
+  //   bodyValues.password = password
+  //   bodyValues.password2 = password2
+  // }
 
   const response = await fetch(url, {
     method: 'PUT',
