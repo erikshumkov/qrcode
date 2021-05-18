@@ -92,8 +92,8 @@
             value="<%= typeof user.github != 'undefined' ? user.github : '' %>"
           />
         </div>
-        <%#
-        <div class="form-group">
+
+        <div class="form-group mt-3">
           <label for="password">Password</label>
           <input
             type="password"
@@ -105,7 +105,7 @@
           />
         </div>
 
-        <div class="form-group">
+        <div class="form-group mt-3">
           <label for="password2">Confirm Password</label>
           <input
             type="password"
@@ -116,13 +116,8 @@
             value=""
           />
         </div>
-        %>
-        <div class="d-grid">
-          <button
-            type="submit"
-            class="btn btn-primary mt-3 mr-2"
-            id="updateBtn"
-          >
+        <div class="d-grid mt-3">
+          <button type="submit" class="btn btn-primary mt-3" id="updateBtn">
             Update
           </button>
           <a href="/dashboard" class="btn btn-secondary mt-2">Go Back</a>

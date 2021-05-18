@@ -1,15 +1,20 @@
-<h1><%= user.name %></h1>
-<p>email: <%= user.email %></p>
-<% if (user.telephone) { %>
-<p>telephone: <%= user.telephone %></p>
-<% } %> <% if (user.website) { %>
-<p>website: <%= user.website %></p>
-<% } %> <% if (user.twitter) { %>
-<p>twitter: <%= user.twitter %></p>
-<% } %> <% if (user.instagram) { %>
-<p>instagram: <%= user.instagram %></p>
-<% } %> <% if (user.facebook) { %>
-<p>facebook: <%= user.facebook %></p>
-<% } %> <% if (user.github) { %>
-<p>github: <%= user.github %></p>
-<% } %>
+<div class="row d-flex flex-column mt-5">
+  <h1 class="mb-4"><%= user.name %></h1>
+  <p>email: <%= user.email %></p>
+  <% if (user.telephone) { %>
+  <p>telephone: <%= user.telephone %></p>
+  <% } %> <% if (user.website) { %>
+  <p>
+    website:
+    <a href="<%= user.website %>" target="_blank"><%= user.website %></a>
+  </p>
+  <% } %> <% if (user.twitter) { %>
+  <p>twitter: <%= user.twitter %></p>
+  <% } %> <% if (user.instagram) { %>
+  <p>instagram: <%= user.instagram %></p>
+  <% } %> <% if (user.facebook) { %>
+  <p>facebook: <%= user.facebook %></p>
+  <% } %> <% if (user.github) { %>
+  <p>github: <%= user.github %></p>
+  <% } %>
+</div>

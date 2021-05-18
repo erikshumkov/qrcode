@@ -42,38 +42,57 @@ router.get('/edit/:id', ensureAuthenticated, async (req, res) => {
 
 // Edit profile
 router.put('/edit/:id', ensureAuthenticated, async (req, res) => {
-  // let user = await User.findById(req.params.id)
+  let user = await User.findById(req.params.id)
 
-  // const {
-  //   name,
-  //   email,
-  //   telephone,
-  //   website,
-  //   twitter,
-  //   instagram,
-  //   facebook,
-  //   github,
-  // } = user
-  // let errors = []
+  let errors = []
 
-  // if (!req.body.name || !req.body.email) {
-  //   errors.push({ msg: 'Please fill in required fields' })
-  // }
+  if (!req.body.name || !req.body.email) {
+    console.log('Name and email required')
+    errors.push({ msg: 'Please fill in required fields' })
+  }
 
-  // if (errors.length > 0) {
-  //   return res.render('update', {
-  //     errors,
-  //     user,
-  //   })
-  // }
+  // Check passwords match
+  if (req.body.password !== req.body.password2) {
+    console.log('Passwords do not match')
+    errors.push({ msg: 'Passwords do not match' })
+  }
+
+  // Check passwords length
+  if (req.body.password.length > 0 && req.body.password.length < 6) {
+    console.log('Password should be 6 characters or more')
+    errors.push({ msg: 'Password should be 6 characters or more' })
+  }
+
+  // If errors occurred, don't go any further
+  if (errors.length > 0) {
+    return res.render('update', {
+      user,
+      errors,
+    })
+  }
+
+  if (req.body.password.length > 0 && req.body.password !== '') {
+    // Hash password
+    const salt = await bcrypt.genSalt(10)
+
+    const hash = await bcrypt.hash(req.body.password, salt)
+
+    req.body.password = hash
+  } else {
+    // Skip password if it wasn't updated
+    delete req.body.password
+    delete req.body.password2
+  }
 
   try {
-    const user = await User.findOneAndUpdate({ _id: req.params.id }, req.body, {
+    user = await User.findOneAndUpdate({ _id: req.params.id }, req.body, {
       new: true,
       runValidators: true,
     })
 
+    req.flash('success_msg', 'Profile successfully updated')
     res.status(200).json({ success: true, redirect: '/dashboard' })
+    // res.status(200).redirect('/dashboard')
   } catch (err) {
     res.status(500).json({ success: false, error: err })
   }
