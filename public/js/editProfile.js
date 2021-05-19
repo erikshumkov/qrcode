@@ -2,18 +2,21 @@ const updateBtn = document.querySelector('#updateBtn')
 const form = document.querySelector('form')
 const id = window.location.href.split('/').slice('-1')[0]
 
+// Add error to required fields
 function errorHandler(field, text) {
   form[field].style.borderColor = 'red'
   form[field].placeholder = text
 
-  if (field === 'password' || field === 'password2') {
+  if (field === 'password' || field === 'password2' || field === 'website') {
     form[field].value = ''
   }
 }
 
+// Update fn for edit profile page
 async function update() {
   const url = `/users/edit/${id}`
 
+  // Get form values
   const name = form.name.value
   const email = form.email.value
   const telephone = form.telephone.value
@@ -38,10 +41,13 @@ async function update() {
     password2,
   }
 
-  form.name.style.borderColor = 'rgb(206, 212, 218)'
-  form.email.style.borderColor = 'rgb(206, 212, 218)'
-  form.password.style.borderColor = 'rgb(206, 212, 218)'
-  form.password2.style.borderColor = 'rgb(206, 212, 218)'
+  // Remove red border if no error
+  const noErrorBorder = 'rgb(206, 212, 218)'
+  form.name.style.borderColor = noErrorBorder
+  form.email.style.borderColor = noErrorBorder
+  form.website.style.borderColor = noErrorBorder
+  form.password.style.borderColor = noErrorBorder
+  form.password2.style.borderColor = noErrorBorder
 
   if (name === '') {
     errorHandler('name', 'Name is required')
@@ -49,6 +55,17 @@ async function update() {
 
   if (email === '') {
     errorHandler('email', 'Email is required')
+  }
+
+  // Regex, check if valid URL
+  const validUrl = /^(ftp|http|https):\/\/[^ "]+$/.test(website)
+
+  // Check URL
+  if (website.length > 0 && !validUrl) {
+    errorHandler(
+      'website',
+      'Optional field, URL need to start with http:// or https://'
+    )
   }
 
   if (password !== password2) {

@@ -51,6 +51,14 @@ router.put('/edit/:id', ensureAuthenticated, async (req, res) => {
     errors.push({ msg: 'Please fill in required fields' })
   }
 
+  // Regex check if valid URL
+  const validUrl = /^(ftp|http|https):\/\/[^ "]+$/.test(req.body.website)
+
+  // Check URL
+  if (req.body.website.length > 0 && !validUrl) {
+    errors.push({ msg: 'Need to be a valid URL' })
+  }
+
   // Check passwords match
   if (req.body.password !== req.body.password2) {
     console.log('Passwords do not match')
